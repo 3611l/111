@@ -33,6 +33,8 @@ extern int bone;
 bool thirdperson = false;
 bool chargerifle = false;
 bool shooting = false;
+int skinchanger = false;
+
 
 bool actions_t = false;
 bool esp_t = false;
@@ -288,6 +290,10 @@ void DoActions()
 					apex_mem.Write<float>(g_Base + OFFSET_TIMESCALE + 0x68, 1.f);
 					tmp_chargerifle = false;
 				}
+			}
+			if(skinchanger)
+			{
+				apex_mem.Write<int>(LocalPlayer + OFFSET_SKIN, static_cast<int>(skinchanger));
 			}
 		}
 	}
@@ -585,6 +591,8 @@ static void set_vars(uint64_t add_addr)
 	client_mem.Read<uint64_t>(add_addr + sizeof(uint64_t)*18, chargerifle_addr);
 	uint64_t shooting_addr = 0;
 	client_mem.Read<uint64_t>(add_addr + sizeof(uint64_t)*19, shooting_addr);
+	uint64_t skinchanger_addr = 0;
+	client_mem.Read<uint64_t>(add_addr + sizeof(uint64_t)*20, skinchanger_addr);
 	
 
 	uint32_t check = 0;
@@ -603,7 +611,7 @@ static void set_vars(uint64_t add_addr)
 		if(c_Base!=0 && g_Base!=0)
 		{
 			client_mem.Write<uint32_t>(check_addr, 0);
-			printf("\nReady\n");
+			printf("\nReady\n\n");
 		}
 
 		while(c_Base!=0 && g_Base!=0)
@@ -612,7 +620,7 @@ static void set_vars(uint64_t add_addr)
 			client_mem.Write<uint64_t>(g_Base_addr, g_Base);
 			client_mem.Write<int>(spectators_addr, spectators);
 			client_mem.Write<int>(allied_spectators_addr, allied_spectators);
-
+			printf("\r\033[0;31m%d\033[0m - \033[0;32m%d\033[0m", spectators, allied_spectators);
 			client_mem.Read<int>(aim_addr, aim);
 			client_mem.Read<bool>(esp_addr, esp);
 			client_mem.Read<bool>(aiming_addr, aiming);
@@ -626,6 +634,7 @@ static void set_vars(uint64_t add_addr)
 			client_mem.Read<bool>(thirdperson_addr, thirdperson);
 			client_mem.Read<bool>(shooting_addr, shooting);
 			client_mem.Read<bool>(chargerifle_addr, chargerifle);
+			client_mem.Read<int>(skinchanger_addr, skinchanger);
 
 			if(esp && next)
 			{
@@ -714,7 +723,7 @@ int main(int argc, char *argv[])
 	//const char* ap_proc = "EasyAntiCheat_launcher.exe";
 
 	//Client "add" offset
-	uint64_t add_off = 0x3f880;
+	uint64_t add_off = 0xb6d0;
 
 	std::thread aimbot_thr;
 	std::thread esp_thr;
