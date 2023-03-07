@@ -293,7 +293,7 @@ void DoActions()
 			}
 			if(skinchanger)
 			{
-				apex_mem.Write<int>(LocalPlayer + OFFSET_SKIN, static_cast<int>(skinchanger));
+				apex_mem.Write<int>(LocalWeapon + OFFSET_SKIN, static_cast<int>(skinchanger));
 			}
 		}
 	}
